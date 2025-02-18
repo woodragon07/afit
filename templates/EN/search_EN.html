@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>A FIT - chat/search</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/searchstyles.css') }}">
+</head>
+<body class="h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/english" class="text-2xl font-bold text-[#FF6B6B] hover:text-[#FF9999] transition-colors">A FIT</a>
+      <div class="flex items-center space-x-6">
+        <a href="/login_EN" class="header-link">login</a>
+        <a href="/signup_EN" class="header-link">create account</a>
+        <a href="/community" class="header-link">community</a>
+        <select class="header-link bg-transparent" id="languageSelect">
+          <option value="en">English</option>
+          <option value="ko">한국어</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex flex-1 overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="sidebar p-6 flex flex-col">
+      <!-- Tabs -->
+      <div class="flex justify-center space-x-3 mb-6">
+        <button class="tab-button tab-active" data-tab="helper">helper</button>
+        <button class="tab-button tab-inactive" data-tab="shopping"> shopping assistant</button>
+      </div>
+
+      <!-- Chat Box -->
+      <div class="mt-4 flex flex-col h-full">
+        <div class="chat-box flex-1 mb-4" id="chat-box"></div>
+        <div class="flex items-center space-x-2">
+          <input type="text" id="chat-input" class="search-input" placeholder="Please enter your search..."/>
+          <button id="send-button" class="whitespace-nowrap px-6 py-3 bg-[#FF9999] hover:bg-[#FF6B6B] text-white rounded-full font-medium transition-colors">
+            sand
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 상품 영역 -->
+    <main class="flex-1 overflow-auto bg-gray-50">
+      <div id="product-area" class="product-grid"></div>
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+</body>
+</html>

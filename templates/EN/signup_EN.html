@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>create account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/signup.css') }}">
+</head>
+<body>
+    <div class="signup-container">
+        <h1 class="logo">A F!T</h1>
+        <p class="signup-title">Please enter the<span>member information</span></p>
+        <form action="{{ url_for('signup_EN') }}" method="post">
+            <div class="input-group">
+                <label for="username">ID</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">PW</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="input-group">
+                <label for="password_confirm">Confirm password</label>
+                <input type="password" id="password_confirm" name="password_confirm" required>
+            </div>
+            <div class="input-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-group">
+                <label for="phone">Phone number</label>
+                <input type="text" id="phone" name="phone" required>
+            </div>
+            <div class="input-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="button-group">
+                <button type="button" class="back-btn" onclick="history.back()">Back</button>
+                <button type="submit" class="submit-btn">Confirm</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

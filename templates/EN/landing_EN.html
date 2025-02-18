@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+ <meta charset="UTF-8">
+ <title>A FIT - main</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/landingstyles.css') }}">
+</head>
+<body>
+ <header>
+   <div style="font-size:24px; font-weight:bold; color:#FF9999;">A FIT</div>
+   <div>  <!-- 영어 -->
+    {% if session['user'] %}
+      <span>wellcom! {{ session['user'].name }}.</span>
+      <a href="/logout">logout</a>
+    {% else %}
+      <a href="/login_EN">login/create account</a> 
+    {% endif %}
+    <a href="/community">community</a> 
+     <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="ko">한국어</option>
+     </select>
+   </div>
+
+ </header>
+
+ <main>
+   <div class="title"> Want, Talk, take </div>
+   <div class="subtitle">Every prize at your price! </div>
+
+   <div class="search-box">
+     <input id="landingInput" type="text" class="search-input" 
+            placeholder="Please enter your search term..." 
+            onkeypress="if(event.key==='Enter'){ goSearch(); }" />
+     <button class="search-btn" onclick="goSearch()">
+       <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2">
+         <circle cx="12" cy="12" r="9"></circle>
+         <line x1="22" y1="22" x2="17.65" y2="17.65"></line>
+       </svg>
+     </button>
+   </div>
+
+   <div class="tab-buttons">
+     <button class="tab-btn tab-active" data-tab="helper">helper</button>
+     <button class="tab-btn tab-inactive" data-tab="shopping">
+        shopping assistant</button>
+   </div>
+ </main>
+ <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+</body>
+</html>
