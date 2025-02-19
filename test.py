@@ -15,7 +15,7 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from database import User, Bookmark
 
-# ====== API Key 설정 ==========
+# ====== API Key 설정 ================
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 NAVER_CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET")
