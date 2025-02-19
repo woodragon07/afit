@@ -8,9 +8,12 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 from utils import search_naver_shopping, format_price 
 import google.generativeai as genai
 from flask_sqlalchemy import SQLAlchemy
-from database import db, User
+# from database import db, User
 import os
 from dotenv import load_dotenv
+from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
+from database import User
 
 # ====== API Key 설정 ==========
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -28,17 +31,19 @@ app.config['SESSION_PERMANENT'] = True  # False에서 True로 변경
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)  # 30일로 설정
 
 # MySQL 데이터베이스 설정
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:dldndyd@localhost/client_db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:dldndyd@localhost/client_db'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# DB 초기화
-db.init_app(app)
+# MongoDB Atlas 연결 설정
+app.config["MONGO_URI"] = "mongodb+srv://dldndyd:dldndyd@afit-client-db.arouq.mongodb.net/afit-client-db?retryWrites=true&w=majority&appName=afit-client-db"
+mongo = PyMongo(app)
+
+# # DB 초기화
+# db.init_app(app)
 
 # 앱 시작시 테이블 생성
 with app.app_context():
     try:
-        # 테이블 생성
-        db.create_all()
         print("데이터베이스 테이블이 성공적으로 생성되었습니다.")
     except Exception as e:
         print(f"데이터베이스 테이블 생성 중 오류 발생: {str(e)}")
@@ -70,15 +75,17 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        
-        user = User.query.filter_by(username=username).first()
-        
-        if not user:
+
+        user_data = mongo.db.users.find_one({"username": username})
+
+        if not user_data:
             return render_template("KO/login.html", username_error="존재하지 않는 아이디입니다.")
-        
+
+        user = User.from_dict(user_data)
+
         if not user.check_password(password):
             return render_template("KO/login.html", password_error="비밀번호가 올바르지 않습니다.")
-        
+
         session.permanent = True
         session['user'] = {
             'id': user.id,
@@ -109,9 +116,82 @@ def login_EN():
             return "Login failed", 401
 
     return render_template("EN/login_EN.html")
-
+# (2) 회원가입 기능 수정
+#######################
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
+    if request.method == 'POST':
+        try:
+            username = request.form.get('username')
+            password = request.form.get('password')
+            password_confirm = request.form.get('password_confirm')
+            email = request.form.get('email')
+            name = request.form.get('name')
+            phone = request.form.get('phone')
+
+            print(f"[회원가입 시도] username={username}, email={email}")
+
+            # 비밀번호 확인 체크
+            if password != password_confirm:
+                return render_template("KO/signup.html", 
+                    password_confirm_error="비밀번호가 일치하지 않습니다.",
+                    username=username,  
+                    email=email,
+                    name=name,
+                    phone=phone
+                )
+
+            # 아이디 중복 체크
+            existing_user = mongo.db.users.find_one({"username": username})
+            if existing_user:
+                print(f"[회원가입 실패] 아이디 중복: {username}")
+                return render_template("KO/signup.html", 
+                    username_error="이미 존재하는 아이디입니다.",
+                    email=email,  
+                    name=name,
+                    phone=phone
+                )
+
+            # 이메일 중복 체크    
+            existing_email = mongo.db.users.find_one({"email": email})
+            if existing_email:
+                print(f"[회원가입 실패] 이메일 중복: {email}")
+                return render_template("KO/signup.html", 
+                    email_error="이미 존재하는 이메일입니다.",
+                    username=username,  
+                    name=name,
+                    phone=phone
+                )
+
+            # 필수 입력 필드 확인
+            if not all([username, password, email, name, phone]):
+                print("[회원가입 실패] 필수 필드 누락")
+                return render_template("KO/signup.html", error="모든 필드를 입력해주세요.")
+
+            # 새 사용자 생성
+            new_user = User(username, email, name, phone)
+            new_user.set_password(password)  # 비밀번호 해싱
+
+            # MongoDB에 저장
+            insert_result = mongo.db.users.insert_one(new_user.to_dict())
+
+            # 저장 확인
+            if insert_result.inserted_id:
+                print(f"[회원가입 성공] username={username}")
+                return redirect(url_for('login'))
+            else:
+                print("[회원가입 실패] MongoDB 데이터 삽입 오류")
+                return render_template("KO/signup.html", error="회원가입 중 문제가 발생했습니다.")
+
+        except Exception as e:
+            print(f"[회원가입 오류] 상세: {str(e)}")
+            return render_template("KO/signup.html", error=f"회원가입 실패: {str(e)}")
+
+    return render_template("KO/signup.html")
+
+
+@app.route("/signup_EN", methods=['GET', 'POST'])
+def signup_EN():
     if request.method == 'POST':
         try:
             username = request.form.get('username')
@@ -120,102 +200,59 @@ def signup():
             email = request.form.get('email')
             name = request.form.get('name')
             phone = request.form.get('phone')
-            
-            print(f"회원가입 시도: username={username}, email={email}")
-            
+
+            print(f"Signup attempt: username={username}, email={email}")
+
             # 비밀번호 확인 체크
             if password != password_confirm:
-                return render_template("KO/signup.html", 
-                    password_confirm_error="비밀번호가 일치하지 않습니다.",
-                    username=username,  # 기존 입력값 유지
+                return render_template("EN/signup_EN.html", 
+                    password_confirm_error="Passwords do not match.",
+                    username=username,  
                     email=email,
                     name=name,
                     phone=phone
                 )
-            
-            # 아이디 중복 체크
-            if User.query.filter_by(username=username).first():
-                print(f"아이디 중복: {username}")
-                return render_template("KO/signup.html", 
-                    username_error="이미 존재하는 아이디입니다.",
-                    email=email,  # 기존 입력값 유지
+
+            # Username duplicate check
+            if mongo.db.users.find_one({"username": username}):
+                print(f"Duplicate username: {username}")
+                return render_template("EN/signup_EN.html", 
+                    username_error="Username already exists.",
+                    email=email,  
                     name=name,
                     phone=phone
                 )
-                
-            # 이메일 중복 체크    
-            if User.query.filter_by(email=email).first():
-                print(f"이메일 중복: {email}")
-                return render_template("KO/signup.html", 
-                    email_error="이미 존재하는 이메일입니다.",
-                    username=username,  # 기존 입력값 유지
+
+            # Email duplicate check    
+            if mongo.db.users.find_one({"email": email}):
+                print(f"Duplicate email: {email}")
+                return render_template("EN/signup_EN.html", 
+                    email_error="Email already exists.",
+                    username=username,  
                     name=name,
                     phone=phone
                 )
-            
+
             if all([username, password, email, name, phone]):
-                # 새 사용자 객체 생성
-                new_user = User()
-                new_user.username = username
-                new_user.email = email
-                new_user.name = name
-                new_user.phone = phone
+                # Create a new user object
+                new_user = User(username, email, name, phone)
                 new_user.set_password(password)
-                
-                # 데이터베이스에 추가
-                db.session.add(new_user)
-                db.session.commit()
-                
-                print(f"회원가입 성공: {username}")
-                return redirect(url_for('login'))
+
+                # Insert into MongoDB
+                mongo.db.users.insert_one(new_user.to_dict())
+
+                print(f"Signup success: {username}")
+                return redirect(url_for('login_EN'))
             else:
-                print("필수 필드 누락")
-                return render_template("KO/signup.html", error="모든 필드를 입력해주세요")
+                print("Missing required fields")
+                return render_template("EN/signup_EN.html", error="Please fill in all fields.")
                 
         except Exception as e:
-            db.session.rollback()
-            print(f"회원가입 실패 상세: {str(e)}")
-            return render_template("KO/signup.html", error=f"회원가입 실패: {str(e)}")
-
-    return render_template("KO/signup.html")
-
-@app.route("/signup_EN", methods=['GET', 'POST'])
-def signup_EN():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        email = request.form.get('email')
-        name = request.form.get('name')
-        phone = request.form.get('phone')
-        
-        # Check for duplicate username
-        if User.query.filter_by(username=username).first():
-            return "Username already exists.", 400
-            
-        # Check for duplicate email
-        if User.query.filter_by(email=email).first():
-            return "Email already exists.", 400
-        
-        if username and password and email and name and phone:
-            new_user = User(
-                username=username,
-                email=email,
-                name=name,
-                phone=phone
-            )
-            new_user.set_password(password)
-            
-            try:
-                db.session.add(new_user)
-                db.session.commit()
-                return redirect(url_for('login_EN'))
-            except Exception as e:
-                db.session.rollback()
-                return "Registration failed: " + str(e), 400
-        else:
-            return "Please fill in all fields", 400
+            print(f"Signup failed: {str(e)}")
+            return render_template("EN/signup_EN.html", error=f"Signup failed: {str(e)}")
 
     return render_template("EN/signup_EN.html")
+
 
 @app.route('/logout')
 def logout():
