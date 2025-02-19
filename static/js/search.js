@@ -158,3 +158,38 @@ const languageSelect = document.getElementById('languageSelect');
                 window.location.href = '/'; //한글로
             }
         });
+
+
+// 북마크 기능
+function toggleBookmark(itemData) {
+  if (!isLoggedIn) {  // isLoggedIn 변수는 서버에서 전달받아야 함
+      alert('로그인이 필요한 서비스입니다.');
+      window.location.href = '/login';
+      return;
+  }
+
+  fetch('/api/bookmark', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(itemData)
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          const button = document.querySelector(`[data-item-id="${itemData.item_id}"]`);
+          button.classList.toggle('bookmarked');
+          // 북마크 상태에 따라 UI 업데이트
+          if (data.action === 'added') {
+              alert('북마크가 추가되었습니다.');
+          } else {
+              alert('북마크가 제거되었습니다.');
+          }
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      alert('북마크 처리 중 오류가 발생했습니다.');
+  });
+}
