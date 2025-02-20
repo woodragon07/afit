@@ -1,4 +1,3 @@
-
 const chatBox = document.getElementById("chat-box");
 const chatInput = document.getElementById("chat-input");
 const productArea = document.getElementById("product-area");
@@ -159,37 +158,74 @@ const languageSelect = document.getElementById('languageSelect');
             }
         });
 
-
-// 북마크 기능
-function toggleBookmark(itemData) {
-  if (!isLoggedIn) {  // isLoggedIn 변수는 서버에서 전달받아야 함
-      alert('로그인이 필요한 서비스입니다.');
-      window.location.href = '/login';
-      return;
-  }
-
-  fetch('/api/bookmark', {
+function saveToDatabase(itemData) {
+  fetch('/api/save-product', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify(itemData)
   })
-  .then(response => response.json())
+  .then(response => {
+      if (response.status === 401) {
+          alert('로그인이 필요한 서비스입니다.');
+          window.location.href = '/login';
+          return;
+      }
+      return response.json();
+  })
   .then(data => {
-      if (data.success) {
-          const button = document.querySelector(`[data-item-id="${itemData.item_id}"]`);
-          button.classList.toggle('bookmarked');
-          // 북마크 상태에 따라 UI 업데이트
-          if (data.action === 'added') {
-              alert('북마크가 추가되었습니다.');
-          } else {
-              alert('북마크가 제거되었습니다.');
-          }
+      if (data && data.success) {
+          const btn = event.currentTarget;
+          btn.classList.add('saved');
+          alert(data.message);
+      } else if (data) {
+          alert(data.message);
       }
   })
   .catch(error => {
       console.error('Error:', error);
-      alert('북마크 처리 중 오류가 발생했습니다.');
+      alert('저장 중 오류가 발생했습니다.');
   });
 }
+
+
+// 북마크 기능
+// function toggleBookmark(itemData) {
+//   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  
+//   fetch('/api/bookmark', {
+//       method: 'POST',
+//       headers: {
+//           'Content-Type': 'application/json',
+//           'X-CSRFToken': csrfToken  // CSRF 토큰 추가
+//       },
+//       body: JSON.stringify(itemData),
+//       credentials: 'include'  // 쿠키 포함
+//   })
+//   .then(response => {
+//       if (response.status === 401) {
+//           alert('로그인이 필요한 서비스입니다.');
+//           window.location.href = '/login';
+//           throw new Error('Unauthorized');
+//       }
+//       return response.json();
+//   })
+//   .then(data => {
+//       if (data.success) {
+//           const button = document.querySelector(`[data-item-id="${itemData.item_id}"]`);
+//           button.classList.toggle('bookmarked');
+//           if (data.action === 'added') {
+//               alert('북마크가 추가되었습니다.');
+//           } else {
+//               alert('북마크가 제거되었습니다.');
+//           }
+//       }
+//   })
+//   .catch(error => {
+//       if (error.message !== 'Unauthorized') {
+//           console.error('Error:', error);
+//           alert('북마크 처리 중 오류가 발생했습니다.');
+//       }
+//   });
+// }
