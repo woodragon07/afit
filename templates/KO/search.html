@@ -16,6 +16,10 @@
           {% if user %}
               <span class="welcome-message">{{ user.name }}님 환영합니다</span>
               <a href="{{ url_for('logout') }}" class="header-link">로그아웃</a>
+              <a href="{{ url_for('view_bookmarks') }}" 
+              class="text-gray-600 hover:text-pink-500 font-medium ml-4">
+               저장된 북마크
+           </a>
           {% else %}
               <a href="{{ url_for('login') }}" class="header-link">로그인</a>
               <a href="{{ url_for('signup') }}" class="header-link">회원가입</a>
@@ -58,5 +62,7 @@
     </main>
   </div>
   <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+  <!-- 페이지 하단에 추가 -->
+  <script src="{{ url_for('static', filename='js/bookmark.js') }}"></script>
 </body>
 </html>

@@ -2,55 +2,47 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A FIT - 북마크</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/landingstyles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/searchstyles.css') }}">
 </head>
-<body>
-    <!-- Header -->
-    <header>
-        <div style="font-size:24px; font-weight:bold; color:#FF9999;">A FIT</div>
-        <div>
-            {% if user %}
-                <span class="welcome-message">{{ user.name }}님 환영합니다</span>
-                <a href="{{ url_for('logout') }}" class="header-link">로그아웃</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="header-link">로그인</a>
-                <a href="{{ url_for('signup') }}" class="header-link">회원가입</a>
-            {% endif %}
-            <a href="/community" class="header-link">커뮤니티</a>
-            <select id="languageSelect">
-                <option value="ko">한국어</option>
-                <option value="en">English</option>
-            </select>
+<body class="bg-gray-50">
+    <!-- 헤더 -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-semibold">A FIT</h1>
+                    <h2 class="text-lg ml-4">저장된 북마크</h2>
+                </div>
+                <div class="flex items-center">
+                    <a href="{{ url_for('search_page') }}" 
+                       class="text-gray-600 hover:text-pink-500 font-medium">
+                        검색으로 돌아가기
+                    </a>
+                    <!-- 언어 선택 -->
+                    <select id="languageSelect" class="ml-4">
+                        <option value="ko" selected>한국어</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main>
-        <div class="title">나의 북마크</div>
-        <div class="subtitle">저장한 상품들을 확인해보세요</div>
-
-        <!-- 북마크 상품 그리드 -->
+    <!-- 메인 컨텐츠 -->
+    <main class="container mx-auto px-4 py-8">
+        {% if bookmarks %}
         <div class="product-grid">
             {% for bookmark in bookmarks %}
             <div class="product-card">
-                <button class="bookmark-btn bookmarked" onclick="toggleBookmark({
-                    item_id: '{{ bookmark.item_id }}',
-                    title: '{{ bookmark.title }}',
-                    price: '{{ bookmark.price }}',
-                    image_url: '{{ bookmark.image_url }}',
-                    product_url: '{{ bookmark.product_url }}'
-                })">
-                    <svg width="24" height="24" fill="currentColor" stroke="currentColor" stroke-width="2">
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </button>
                 <div class="product-image-container">
                     <img src="{{ bookmark.image_url }}" alt="{{ bookmark.title }}" class="product-image"/>
                 </div>
                 <div class="product-info">
+                    <div class="product-meta">{{ bookmark.mall_name }}</div>
                     <h3 class="product-title">{{ bookmark.title }}</h3>
-                    <div class="product-price">{{ bookmark.price }}원</div>
+                    <div class="product-price">{{ bookmark.price }}</div>
                     <div class="mt-4">
                         <a href="{{ bookmark.product_url }}" target="_blank"
                            class="block w-full text-center bg-[#FF9999] hover:bg-[#FF6B6B] text-white py-2 px-4 rounded-md transition-colors">
@@ -61,11 +53,13 @@
             </div>
             {% endfor %}
         </div>
-
-        {% if not bookmarks %}
-        <div class="empty-state">
-            <p>저장된 북마크가 없습니다.</p>
-            <a href="/" class="search-btn">상품 검색하러 가기</a>
+        {% else %}
+        <div class="text-center py-8">
+            <p class="text-gray-500">저장된 북마크가 없습니다.</p>
+            <a href="{{ url_for('search_page') }}" 
+               class="text-pink-500 hover:text-pink-600 mt-2 inline-block">
+                상품 검색하러 가기
+            </a>
         </div>
         {% endif %}
     </main>

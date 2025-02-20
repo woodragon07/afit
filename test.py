@@ -1,10 +1,5 @@
 import re
-import urllib.parse
-import requests
-import json
 from datetime import timedelta
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from utils import search_naver_shopping, format_price 
 import google.generativeai as genai
 from flask_sqlalchemy import SQLAlchemy
@@ -14,8 +9,17 @@ from dotenv import load_dotenv
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from database import User, Bookmark
+from pymongo import MongoClient
+from datetime import datetime
+from flask_login import current_user, login_required
+from datetime import datetime, timedelta
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
+...
+
+
 
 # ====== API Key 설정 ================
+load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 NAVER_CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET")
@@ -35,9 +39,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)  # 30일로 설정
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # MongoDB Atlas 연결 설정
-app.config["MONGO_URI"] = "mongodb+srv://dldndyd:dldndyd@afit-client-db.arouq.mongodb.net/afit-client-db?retryWrites=true&w=majority&appName=users"
-app.config["MONGO_URI"] = "mongodb+srv://dldndyd:dldndyd@afit-client-db.arouq.mongodb.net/afit-client-db?retryWrites=true&w=majority&appName=product_bookmark"
-
+app.config["MONGO_URI"] = "mongodb+srv://dldndyd:dldndyd@afit-client-db.arouq.mongodb.net/afit-client-db?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
 # # DB 초기화
@@ -301,7 +303,15 @@ def chat():
                 for it in items:
                     product_html = f"""
                     <div class="product-card">
-                        <button class="bookmark-btn">
+                        <button type="button" class="bookmark-btn" id="bookmark-{it.get('productId', '')}"
+                                onclick="toggleBookmark({{
+                                    item_id: '{it.get('productId', '')}',
+                                    title: '{it['title'].replace("'", "\\'")}',
+                                    price: '{it['formatted_price']}',
+                                    mall_name: '{it.get('mall_name', '').replace("'", "\\'")}',
+                                    image_url: '{it['image']}',
+                                    product_url: '{it['link']}'
+                                }})">
                             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                             </svg>
@@ -344,51 +354,158 @@ def chat():
         return jsonify([{"response": "지원하지 않는 모드입니다."}])
     
 
-#북마크기능
-@app.route('/api/bookmark', methods=['POST'])
-def toggle_bookmark():
+@app.route('/api/bookmarks', methods=['POST'])
+def add_bookmark():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': '로그인이 필요합니다.'}), 401
+
     try:
         data = request.json
-        user_id = current_user.id
+        print("받은 데이터:", data)  # 디버깅용 로그
         
+        user_id = session['user']['id']
+        print("현재 사용자:", user_id)  # 디버깅용 로그
+
         # 이미 북마크된 항목인지 확인
-        existing_bookmark = mongo.db.bookmarks.find_one({
+        existing_bookmark = mongo.db.product_bookmark.find_one({
             'user_id': user_id,
             'item_id': data['item_id']
         })
 
         if existing_bookmark:
-            # 이미 북마크된 경우 삭제
-            mongo.db.bookmarks.delete_one({
-                'user_id': user_id,
-                'item_id': data['item_id']
-            })
-            return jsonify({'success': True, 'action': 'removed'})
-        else:
-            # 새로운 북마크 추가
+            return jsonify({'success': False, 'message': '이미 북마크된 상품입니다.'})
+
+        try:
+            # 새로운 북마크 생성
             bookmark = Bookmark(
                 user_id=user_id,
                 item_id=data['item_id'],
                 title=data['title'],
                 price=data['price'],
-                image_url=data['image_url'],
-                product_url=data['product_url']
+                mall_name=data['mall_name'],
+                product_url=data['product_url'],
+                image_url=data['image_url']
             )
-            mongo.db.bookmarks.insert_one(bookmark.to_dict())
-            return jsonify({'success': True, 'action': 'added'})
+            
+            # MongoDB에 저장
+            result = mongo.db.product_bookmark.insert_one(bookmark.to_dict())
+            print("저장 성공:", result.inserted_id)  # 디버깅용 로그
+            
+            return jsonify({
+                'success': True,
+                'message': '북마크가 추가되었습니다.',
+                'bookmark_id': str(result.inserted_id)
+            })
+            
+        except Exception as e:
+            print("북마크 생성 중 오류:", str(e))  # 디버깅용 로그
+            raise e
 
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 400
+        print("전체 오류:", str(e))  # 디버깅용 로그
+        return jsonify({'success': False, 'message': str(e)}), 500
 
-#북마크라우트
+@app.route('/api/bookmarks', methods=['GET'])
+def get_bookmarks():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': '로그인이 필요합니다.'}), 401
+
+    try:
+        user_id = session['user']['id']
+        bookmarks = list(mongo.db.product_bookmark.find({'user_id': user_id}))
+        
+        # ObjectId를 문자열로 변환
+        for bookmark in bookmarks:
+            bookmark['_id'] = str(bookmark['_id'])
+            
+        return jsonify({
+            'success': True,
+            'bookmarks': bookmarks
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/bookmarks/<item_id>', methods=['DELETE'])
+def remove_bookmark(item_id):
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': '로그인이 필요합니다.'}), 401
+
+    try:
+        user_id = session['user']['id']
+        result = mongo.db.product_bookmark.delete_one({
+            'user_id': user_id,
+            'item_id': item_id
+        })
+
+        if result.deleted_count > 0:
+            return jsonify({
+                'success': True,
+                'message': '북마크가 삭제되었습니다.'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': '북마크를 찾을 수 없습니다.'
+            }), 404
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 @app.route('/bookmarks')
 def view_bookmarks():
-    user = session.get('user')
-    if not user:
+    if 'user' not in session:
         return redirect(url_for('login'))
         
-    bookmarks = list(mongo.db.bookmarks.find({'user_id': user['id']}))
+    user = session['user']
+    bookmarks = list(mongo.db.product_bookmark.find({'user_id': user['id']}))
     return render_template('KO/bookmarks.html', user=user, bookmarks=bookmarks)
+
+# #북마크기능
+# @app.route('/api/bookmark', methods=['POST'])
+# def toggle_bookmark():
+#     try:
+#         data = request.json
+#         user_id = current_user.id
+        
+#         # 이미 북마크된 항목인지 확인
+#         existing_bookmark = mongo.db.bookmarks.find_one({
+#             'user_id': user_id,
+#             'item_id': data['item_id']
+#         })
+
+#         if existing_bookmark:
+#             # 이미 북마크된 경우 삭제
+#             mongo.db.bookmarks.delete_one({
+#                 'user_id': user_id,
+#                 'item_id': data['item_id']
+#             })
+#             return jsonify({'success': True, 'action': 'removed'})
+#         else:
+#             # 새로운 북마크 추가
+#             bookmark = Bookmark(
+#                 user_id=user_id,
+#                 item_id=data['item_id'],
+#                 title=data['title'],
+#                 price=data['price'],
+#                 image_url=data['image_url'],
+#                 product_url=data['product_url']
+#             )
+#             mongo.db.bookmarks.insert_one(bookmark.to_dict())
+#             return jsonify({'success': True, 'action': 'added'})
+
+#     except Exception as e:
+#         return jsonify({'success': False, 'error': str(e)}), 400
+
+# #북마크라우트
+# @app.route('/bookmarks')
+# def view_zbookmarks():
+#     user = session.get('user')
+#     if not user:
+#         return redirect(url_for('login'))
+        
+#     bookmarks = list(mongo.db.bookmarks.find({'user_id': user['id']}))
+#     return render_template('KO/bookmarks.html', user=user, bookmarks=bookmarks)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
