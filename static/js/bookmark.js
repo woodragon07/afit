@@ -1,29 +1,38 @@
-function toggleBookmark(itemData) {
-    fetch('/api/bookmark', {
+function toggleBookmark(productData) {
+    console.log('북마크 시도:', productData);  // 디버깅용 로그
+
+    // 북마크 버튼 요소 찾기==
+    const bookmarkBtn = document.getElementById(`bookmark-${productData.item_id}`);
+    
+    fetch('/api/bookmarks', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(itemData)
+        body: JSON.stringify(productData)
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`로그인 후 사용해주세요! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('서버 응답:', data);  // 디버깅용 로그
+        
         if (data.success) {
-            if (data.action === 'removed') {
-                // 북마크 페이지에서는 카드를 제거
-                const card = document.querySelector(`[data-item-id="${itemData.item_id}"]`).closest('.product-card');
-                card.remove();
-                
-                // 카드가 모두 제거되었는지 확인
-                const remainingCards = document.querySelectorAll('.product-card');
-                if (remainingCards.length === 0) {
-                    location.reload(); // 빈 상태 메시지를 보여주기 위해 페이지 새로고침
-                }
+            // 북마크 버튼 스타일 토글
+            if (bookmarkBtn) {
+                bookmarkBtn.classList.toggle('bookmarked');
             }
+            // 성공 메시지 표시
+            alert(data.message);
+        } else {
+            throw new Error(data.message || '북마크 처리 중 오류가 발생했습니다.');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('북마크 처리 중 오류가 발생했습니다.');
+        console.error('북마크 오류:', error);
+        alert(error.message);
     });
 }

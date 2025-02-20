@@ -10,7 +10,7 @@ body {
   }
   .flex-1 { flex:1; }
   .overflow-hidden { overflow:hidden; }
-  .bg-gray-50 { background:#F9FAFB; }
+  .bg-gray-50 { background:#FFF9F0; }
 
   /* --- 기존 CSS 그대로 --- */
   .sidebar {
@@ -34,7 +34,7 @@ body {
   }
 
   .tab-active {
-    background-color: #FF9999;
+    background-color: #305CDE;
     color: white;
     border-radius: 20px;
     padding: 8px 16px;
@@ -98,6 +98,9 @@ body {
     background:rgb(171, 205, 255);
     transform:scale(1.1);
   }
+  .bookmark-btn.bookmarked svg {
+    fill: #FF9999;
+  } 
   .product-info {
     padding:16px;
   }
