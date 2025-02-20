@@ -6,7 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f9f9f9;
+    background-color: #fff9f0;
     margin: 0;
 }
 
@@ -80,6 +80,6 @@ body {
 }
 
 .submit-btn {
-    background-color: #ff7f7f;
+    background-color: #305CDE;
     color: white;
 }

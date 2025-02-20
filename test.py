@@ -461,51 +461,5 @@ def view_bookmarks():
     bookmarks = list(mongo.db.product_bookmark.find({'user_id': user['id']}))
     return render_template('KO/bookmarks.html', user=user, bookmarks=bookmarks)
 
-# #북마크기능
-# @app.route('/api/bookmark', methods=['POST'])
-# def toggle_bookmark():
-#     try:
-#         data = request.json
-#         user_id = current_user.id
-        
-#         # 이미 북마크된 항목인지 확인
-#         existing_bookmark = mongo.db.bookmarks.find_one({
-#             'user_id': user_id,
-#             'item_id': data['item_id']
-#         })
-
-#         if existing_bookmark:
-#             # 이미 북마크된 경우 삭제
-#             mongo.db.bookmarks.delete_one({
-#                 'user_id': user_id,
-#                 'item_id': data['item_id']
-#             })
-#             return jsonify({'success': True, 'action': 'removed'})
-#         else:
-#             # 새로운 북마크 추가
-#             bookmark = Bookmark(
-#                 user_id=user_id,
-#                 item_id=data['item_id'],
-#                 title=data['title'],
-#                 price=data['price'],
-#                 image_url=data['image_url'],
-#                 product_url=data['product_url']
-#             )
-#             mongo.db.bookmarks.insert_one(bookmark.to_dict())
-#             return jsonify({'success': True, 'action': 'added'})
-
-#     except Exception as e:
-#         return jsonify({'success': False, 'error': str(e)}), 400
-
-# #북마크라우트
-# @app.route('/bookmarks')
-# def view_zbookmarks():
-#     user = session.get('user')
-#     if not user:
-#         return redirect(url_for('login'))
-        
-#     bookmarks = list(mongo.db.bookmarks.find({'user_id': user['id']}))
-#     return render_template('KO/bookmarks.html', user=user, bookmarks=bookmarks)
-
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
