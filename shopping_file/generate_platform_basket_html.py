@@ -1,5 +1,4 @@
-from utils import format_price
-
+from functions.utils import format_price
 
 def generate_platform_basket_html(basket, format_price):
     platform = basket["platform"]

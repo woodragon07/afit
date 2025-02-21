@@ -8,7 +8,7 @@ from flask import Flask
 # from utils.error_handler import register_error_handlers
 
 # Blueprint 임포트
-from routes import auth_routes, product_routes, bookmark_routes, chatrecommendation_routes
+from routes import auth_routes, product_routes, bookmark_routes, chatrecommendation_routes, shopping_secretary_routes
 
 # 확장 모듈 임포트 (extensions.py에 정의)
 from extensions import mongo
@@ -47,6 +47,8 @@ def create_app():
     app.register_blueprint(product_routes.bp)
     app.register_blueprint(bookmark_routes.bp)
     app.register_blueprint(chatrecommendation_routes.bp)
+    # 새로 만든 쇼핑 도우미 Blueprint 등록
+    app.register_blueprint(shopping_secretary_routes.bp)
     
     # 에러 핸들러 등록
     # register_error_handlers(app)

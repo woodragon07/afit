@@ -1,7 +1,7 @@
 import re
 import json
 import google.generativeai as genai
-from utils import search_naver_shopping, format_price  # utils에서 가져옴 네이버 쇼핑서치,가격출력력
+from functions.utils import search_naver_shopping, format_price  # utils에서 가져옴 네이버 쇼핑서치,가격출력력
 from shopping_file.parse_shopping_request_with_llm import parse_shopping_request_with_llm
 from shopping_file.generate_platform_basket_html import generate_platform_basket_html
 from shopping_file.search_platform_items import search_platform_items

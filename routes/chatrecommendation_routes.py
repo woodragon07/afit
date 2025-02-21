@@ -1,7 +1,8 @@
 # routes/recommendation_routes.py 채팅/추천 관련 라우트를 담당
 import re
 from flask import Blueprint, request, jsonify
-from utils import search_naver_shopping, format_price
+from functions.utils import search_naver_shopping, format_price
+
 
 bp = Blueprint('recommendation', __name__)
 
@@ -77,7 +78,7 @@ def chat():
         return jsonify(responses)
     
     elif mode == "shopping":
-        from secretary import handle_shopping_secretary_mode
+        from functions.secretary import handle_shopping_secretary_mode
         responses = handle_shopping_secretary_mode(user_message, search_naver_shopping, format_price)
         return jsonify(responses)
     else:
