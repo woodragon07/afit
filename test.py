@@ -14,9 +14,24 @@ from datetime import datetime
 from flask_login import current_user, login_required
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
-...
+from routes import auth_routes, product_routes, bookmark_routes, recommendation_routes
+from utils.error_handler import register_error_handlers
+import config
 
-
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(config.Config)
+    
+    # 라우트 등록
+    app.register_blueprint(auth_routes.bp)
+    app.register_blueprint(product_routes.bp)
+    app.register_blueprint(bookmark_routes.bp)
+    app.register_blueprint(recommendation_routes.bp)
+    
+    # 에러 핸들러 등록
+    register_error_handlers(app)
+    
+    return app
 
 # ====== API Key 설정 ================
 load_dotenv()
@@ -461,5 +476,7 @@ def view_bookmarks():
     bookmarks = list(mongo.db.product_bookmark.find({'user_id': user['id']}))
     return render_template('KO/bookmarks.html', user=user, bookmarks=bookmarks)
 
+
 if __name__ == "__main__":
+    app = create_app()
     app.run(debug=True, port=5000)
