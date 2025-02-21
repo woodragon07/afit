@@ -79,7 +79,7 @@
     <div class="signup-container">
         <h1 class="logo">A F!T</h1>
         <p class="signup-title"><span>회원정보</span>를 입력해주세요</p>
-        <form method="POST" action="{{ url_for('signup') }}" onsubmit="return validatePassword()">
+        <form method="POST" action="{{ url_for('auth.signup') }}" onsubmit="return validatePassword()">
             <div class="input-group">
                 <label for="username">아이디</label>
                 <input type="text" id="username" name="username" value="{{ username or '' }}" required>

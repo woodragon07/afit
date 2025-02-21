@@ -12,15 +12,15 @@
    <div>  <!-- 한글 화면 -->
           {% if user %}
               <span class="welcome-message">{{ user.name }}님 환영합니다</span>
-              <a href="{{ url_for('logout') }}" class="text-gray-600 hover:text-pink-500 font-medium ml-4">로그아웃</a>
-              <a href="{{ url_for('view_bookmarks') }}" 
+              <a href="{{ url_for('auth.logout') }}" class="text-gray-600 hover:text-pink-500 font-medium ml-4">로그아웃</a>
+              <a href="{{ url_for('bookmark.view_bookmarks') }}" 
               class="text-gray-600 hover:text-pink-500 font-medium ml-4">
                저장된 북마크
               </a>
           {% else %}
-              <a href="{{ url_for('login') }}" class="text-gray-600 hover:text-pink-500 font-medium ml-4">로그인</a>
-              <a href="{{ url_for('signup') }}" class="text-gray-600 hover:text-pink-500 font-medium ml-4">회원가입</a>
-              <a href="{{ url_for('view_bookmarks') }}" 
+              <a href="{{ url_for('auth.login') }}" class="text-gray-600 hover:text-pink-500 font-medium ml-4">로그인</a>
+              <a href="{{ url_for('auth.signup') }}" class="text-gray-600 hover:text-pink-500 font-medium ml-4">회원가입</a>
+              <a href="{{ url_for('bookmark.view_bookmarks') }}" 
               class="text-gray-600 hover:text-pink-500 font-medium ml-4">
                저장된 북마크
               </a>
