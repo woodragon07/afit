@@ -1,5 +1,4 @@
-from utils import format_price
-
+from functions.utils import format_price
 
 def generate_platform_basket_html(basket, format_price):
     platform = basket["platform"]
@@ -14,7 +13,7 @@ def generate_platform_basket_html(basket, format_price):
                 <img src="{item['image']}" class="w-16 h-16 object-cover rounded" alt="{item['title']}"/>
                 <div class="ml-3 flex-1">
                     <div class="text-sm font-medium">{item['title']}</div>
-                    <div class="text-[#FF6B6B] font-bold mt-1">{format_price(item['price'])}</div>
+                    <div class="text-[#2600FF] font-bold mt-1">{format_price(item['price'])}</div>
                 </div>
             </a>
         </div>
@@ -31,7 +30,7 @@ def generate_platform_basket_html(basket, format_price):
         </div>
         <div class="p-4 bg-gray-50 flex items-center justify-between">
             <span>총 금액</span>
-            <span class="text-lg font-bold text-[#FF6B6B]">{format_price(total_price)}</span>
+            <span class="text-lg font-bold text-[#2600FF]">{format_price(total_price)}</span>
         </div>
     </div>
     """

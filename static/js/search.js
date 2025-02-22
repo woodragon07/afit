@@ -145,7 +145,6 @@ btn.addEventListener("click", () => {
 });
 });
 
-
 //한/영 페이지 변환 기능능
 const languageSelect = document.getElementById('languageSelect');
         
@@ -158,36 +157,36 @@ const languageSelect = document.getElementById('languageSelect');
             }
         });
 
-function saveToDatabase(itemData) {
-  fetch('/api/save-product', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(itemData)
-  })
-  .then(response => {
-      if (response.status === 401) {
-          alert('로그인이 필요한 서비스입니다.');
-          window.location.href = '/login';
-          return;
-      }
-      return response.json();
-  })
-  .then(data => {
-      if (data && data.success) {
-          const btn = event.currentTarget;
-          btn.classList.add('saved');
-          alert(data.message);
-      } else if (data) {
-          alert(data.message);
-      }
-  })
-  .catch(error => {
-      console.error('Error:', error);
-      alert('저장 중 오류가 발생했습니다.');
-  });
-}
+// function saveToDatabase(itemData) {
+//   fetch('/api/save-product', {
+//       method: 'POST',
+//       headers: {
+//           'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(itemData)
+//   })
+//   .then(response => {
+//       if (response.status === 401) {
+//           alert('로그인이 필요한 서비스입니다.');
+//           window.location.href = '/login';
+//           return;
+//       }
+//       return response.json();
+//   })
+//   .then(data => {
+//       if (data && data.success) {
+//           const btn = event.currentTarget;
+//           btn.classList.add('saved');
+//           alert(data.message);
+//       } else if (data) {
+//           alert(data.message);
+//       }
+//   })
+//   .catch(error => {
+//       console.error('Error:', error);
+//       alert('저장 중 오류가 발생했습니다.');
+//   });
+// }
 
 
 // 북마크 기능

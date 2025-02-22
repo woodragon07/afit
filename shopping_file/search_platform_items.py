@@ -1,4 +1,4 @@
-from utils import search_naver_shopping, format_price  # utils에서 가져옴 네이버 쇼핑서치,가격출력력
+from functions.utils import search_naver_shopping, format_price  # utils에서 가져옴 네이버 쇼핑서치,가격출력력
 
 def search_platform_items(platform, item_name, price_limit, search_naver_shopping):
     try:

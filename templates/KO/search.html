@@ -10,22 +10,31 @@
   <!-- Header -->
   <header class="bg-white shadow-sm">
     <div class="container mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="text-2xl font-bold text-[#FF6B6B] hover:text-[#FF9999] transition-colors">A FIT</a>
+      <a href="/" class="text-2xl font-bold text-[#305CDE] hover:text-[#305CDE] transition-colors">A FIT</a>
       <div class="flex items-center space-x-6">
         <div class="header">
           {% if user %}
               <span class="welcome-message">{{ user.name }}님 환영합니다</span>
-              <a href="{{ url_for('logout') }}" class="header-link">로그아웃</a>
+              <a href="{{ url_for('auth.logout') }}" class="header-link">로그아웃</a>
+              <a href="{{ url_for('bookmark.view_bookmarks') }}" 
+              class="text-gray-600 hover:text-biue-500 font-medium ml-4">
+               저장된 북마크
+             </a>
           {% else %}
-              <a href="{{ url_for('login') }}" class="header-link">로그인</a>
-              <a href="{{ url_for('signup') }}" class="header-link">회원가입</a>
+              <a href="{{ url_for('auth.login') }}" class="header-link">로그인</a>
+              <a href="{{ url_for('auth.signup') }}" class="header-link">회원가입</a>
+              <a href="{{ url_for('bookmark.view_bookmarks') }}" 
+              class="text-gray-600 hover:text-biue-500 font-medium ml-4">
+               저장된 북마크
+              </a>
           {% endif %}
         </div>
         <a href="/community" class="header-link">커뮤니티</a>
-        <select class="header-link bg-transparent">
-          <option>한국어</option>
-          <option>English</option>
+        <select id="languageSelect" class="ml-4 border p-1 rounded">
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
         </select>
+      
       </div>
     </div>
   </header>
@@ -45,7 +54,7 @@
         <div class="chat-box flex-1 mb-4" id="chat-box"></div>
         <div class="flex items-center space-x-2">
           <input type="text" id="chat-input" class="search-input" placeholder="메시지를 입력하세요..."/>
-          <button id="send-button" class="whitespace-nowrap px-6 py-3 bg-[#FF9999] hover:bg-[#FF6B6B] text-white rounded-full font-medium transition-colors">
+          <button id="send-button" class="whitespace-nowrap px-6 py-3 bg-[#305CDE] hover:bg-[#305CDE] text-white rounded-full font-medium transition-colors">
             전송
           </button>
         </div>
@@ -58,5 +67,7 @@
     </main>
   </div>
   <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+  <!-- 페이지 하단에 추가 -->
+  <script src="{{ url_for('static', filename='js/bookmark.js') }}"></script>
 </body>
 </html>

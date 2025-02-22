@@ -35,3 +35,22 @@ const languageSelect = document.getElementById('languageSelect');
                 window.location.href = '/'; //한글로
             }
         });
+
+// // 영어로 바꾸면 영어페이지 검색으로 돌아감
+// document.addEventListener("DOMContentLoaded", function() {
+//   const languageSelect = document.getElementById("languageSelect");
+
+//   if (languageSelect) {
+//       languageSelect.addEventListener("change", function() {
+//           const selectedLanguage = this.value;
+//           if (selectedLanguage === "en") {
+//               window.location.href = "/english"; // 영어 페이지로 이동
+//           } else {
+//               window.location.href = "/"; // 한글 페이지로 이동
+//           }
+//       });
+//   } else {
+//       console.error("languageSelect 요소를 찾을 수 없습니다.");
+//   }
+// });
+

@@ -3,13 +3,19 @@ body {
     margin: 0; padding:0;
     display: flex; flex-direction:column;
     height:100vh; font-family:sans-serif;
+    background-color: #FFF9F0;
   }
   header {
-    height:60px; display:flex; justify-content:space-between; align-items:center; 
+    height:60px; display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
     padding:0 24px;
   }
   main {
-    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    flex:1; display:flex; 
+    flex-direction:column; 
+    align-items:center; 
+    justify-content:center; 
   }
   
   .title {
@@ -21,11 +27,12 @@ body {
   .subtitle {
     font-size: 24px;  
     margin-bottom: 50px;
-    color: #FF9999;
+    color: #7991d8;
   }
   
   .search-box {
-    position:relative; margin-bottom:20px;
+    position:relative; 
+    margin-bottom:20px;
   }
   .search-input {
     width:500px;  
@@ -36,26 +43,37 @@ body {
     font-size:18px;  
     outline:none;
     box-shadow:0 3px 6px rgba(0,0,0,0.1);
+    background-color: #FFFFFF
   }
   .search-btn {
-    position:absolute; right:18px; top:50%; transform:translateY(-50%);
-    background:none; border:none; cursor:pointer;
+    position:absolute; 
+    right:18px; top:50%; 
+    transform:translateY(-50%);
+    background:none; 
+    border:none; 
+    cursor:pointer;
   }
 
   .tab-buttons {
     display:flex; gap:16px;
   }
   .tab-btn {
-    border-radius:20px; padding:10px 20px; 
-    border:none; cursor:pointer;
+    border-radius:20px; 
+    padding:8px 16px; 
+    border:none; 
+    cursor:pointer;
     box-shadow:0 3px 6px rgba(0,0,0,0.1);
-    font-size:18px; 
+    font-size:18px;
   }
+  .element {
+    padding: 10px; /* 모든 방향에 10px 여백 */
+  }
+
   .tab-btn:hover {
     box-shadow:0 3px 10px rgba(0,0,0,0.2);
   }
   .tab-active {
-    background:#FF9999; color:white;
+    background:#305CDE; color:white;
   }
   .tab-inactive {
     background:#fff; color:#333;
