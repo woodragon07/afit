@@ -114,6 +114,28 @@
                 <input type="tel" id="phone" name="phone" value="{{ phone or '' }}" required>
             </div>
             <div class="input-group">
+            <label for="gender">성별</label>
+            <select id="gender" name="gender" required>
+                <option value="">선택하세요</option>
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+                <option value="other">기타</option>
+            </select>
+            </div>
+            <div class="input-group">
+                <label for="region">지역</label>
+                <select id="region" name="region" required>
+                    <option value="">선택하세요</option>
+                    <option value="seoul">서울</option>
+                    <option value="gyeonggi">경기</option>
+                    <option value="chungnam">충남</option>
+                </select>
+                </div>
+            <div class="input-group">
+                <label for="age">나이</label>
+                <input type="number" id="age" name="age" value="{{ age or '' }}" required>
+            </div>
+            <div class="input-group">
                 <label for="email">이메일</label>
                 <input type="email" 
                        id="email" 
