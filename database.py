@@ -6,13 +6,16 @@ from datetime import datetime
 mongo = PyMongo()
 
 class User(UserMixin):
-    def __init__(self, username, email, name, phone, password=None, _id=None):
+    def __init__(self, username, email, name, phone, gender, region, age, password=None, _id=None):
         self.id = str(_id) if _id else None  # MongoDB의 _id는 ObjectId이므로 문자열 변환 필요ㅋ
         self.username = username
         self.email = email
         self.name = name
         self.phone = phone
         self.password = password
+        self.gender = gender
+        self.region = region
+        self.age = age
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -27,6 +30,9 @@ class User(UserMixin):
             "email": self.email,
             "name": self.name,
             "phone": self.phone,
+            "gender": self.gender,
+            "region": self.region,
+            "age": self.age,
             "password": self.password  # 해싱된 비밀번호 저장
             #ㅅㅂ존나힘드네
         }
@@ -39,6 +45,9 @@ class User(UserMixin):
             email=user_dict["email"],
             name=user_dict["name"],
             phone=user_dict["phone"],
+            gender=user_dict["gender"],
+            region=user_dict["region"],
+            age=user_dict["age"],
             password=user_dict["password"],
             _id=user_dict["_id"]
         )

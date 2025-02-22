@@ -17,14 +17,22 @@
               <span class="welcome-message">{{ user.name }}님 환영합니다</span>
               <a href="{{ url_for('auth.logout') }}" class="header-link">로그아웃</a>
               <a href="{{ url_for('bookmark.view_bookmarks') }}" 
+<<<<<<< HEAD
               class="text-gray-600 hover:text-biue-500 font-medium ml-4">
+=======
+              class="text-gray-600 hover:text-pink-500 font-medium ml-4">
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
                저장된 북마크
              </a>
           {% else %}
               <a href="{{ url_for('auth.login') }}" class="header-link">로그인</a>
               <a href="{{ url_for('auth.signup') }}" class="header-link">회원가입</a>
               <a href="{{ url_for('bookmark.view_bookmarks') }}" 
+<<<<<<< HEAD
               class="text-gray-600 hover:text-biue-500 font-medium ml-4">
+=======
+              class="text-gray-600 hover:text-pink-500 font-medium ml-4">
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
                저장된 북마크
               </a>
           {% endif %}

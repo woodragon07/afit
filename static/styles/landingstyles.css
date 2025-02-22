@@ -10,12 +10,18 @@ body {
     justify-content:space-between; 
     align-items:center; 
     padding:0 24px;
+    background-color: #FFF9F0;
+    
   }
   main {
+<<<<<<< HEAD
     flex:1; display:flex; 
     flex-direction:column; 
     align-items:center; 
     justify-content:center; 
+=======
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; background-color: #FFF9F0;
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
   }
   
   .title {

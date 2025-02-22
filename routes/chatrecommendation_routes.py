@@ -60,7 +60,11 @@ def chat():
                             <div class="product-recommendation">추천 상품</div>
                             <div class="mt-4">
                                 <a href="{it['link']}" target="_blank"
+<<<<<<< HEAD
                                    class="block w-full text-center bg-[#2600FF] hover:bg-[#2600FF] text-white py-2 px-4 rounded-md transition-colors">
+=======
+                                   class="block w-full text-center bg-[#FF9999] hover:bg-[#FF6B6B] text-white py-2 px-4 rounded-md transition-colors">
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
                                    제품 보기
                                 </a>
                             </div>

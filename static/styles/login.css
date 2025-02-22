@@ -6,7 +6,11 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+<<<<<<< HEAD
             background-color: #FFF9F0;
+=======
+            background-color: #fff9f0;
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
             margin: 0;
         }
 

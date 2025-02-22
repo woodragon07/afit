@@ -57,26 +57,49 @@ def signup():
             email = request.form.get('email')
             name = request.form.get('name')
             phone = request.form.get('phone')
+<<<<<<< HEAD
+=======
+            gender = request.form.get('gender')
+            region = request.form.get('region')
+            age = request.form.get('age')
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
 
             if password != password_confirm:
                 return render_template("KO/signup.html", 
                     password_confirm_error="비밀번호가 일치하지 않습니다.",
+<<<<<<< HEAD
                     username=username, email=email, name=name, phone=phone
+=======
+                    username=username, email=email, name=name, phone=phone, gender=gender, region=region, age=age
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
                 )
             if mongo.db.users.find_one({"username": username}):
                 return render_template("KO/signup.html", 
                     username_error="이미 존재하는 아이디입니다.",
+<<<<<<< HEAD
                     email=email, name=name, phone=phone
+=======
+                    email=email, name=name, phone=phone, gender=gender, region=region, age=age
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
                 )
             if mongo.db.users.find_one({"email": email}):
                 return render_template("KO/signup.html", 
                     email_error="이미 존재하는 이메일입니다.",
+<<<<<<< HEAD
                     username=username, name=name, phone=phone
                 )
             if not all([username, password, email, name, phone]):
                 return render_template("KO/signup.html", error="모든 필드를 입력해주세요.")
 
             new_user = User(username, email, name, phone)
+=======
+                    username=username, name=name, phone=phone, gender=gender, region=region, age=age
+                )
+            if not all([username, password, email, name, phone, gender, region, age]):
+                return render_template("KO/signup.html", error="모든 필드를 입력해주세요.")
+
+            new_user = User(username, email, name, phone, gender, region, age)
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
             new_user.set_password(password)
             insert_result = mongo.db.users.insert_one(new_user.to_dict())
             if insert_result.inserted_id:
@@ -97,24 +120,45 @@ def signup_EN():
             email = request.form.get('email')
             name = request.form.get('name')
             phone = request.form.get('phone')
+<<<<<<< HEAD
+=======
+            gender = request.form.get('gender')
+            region = request.form.get('region')
+            age = request.form.get('age')
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
 
             if password != password_confirm:
                 return render_template("EN/signup_EN.html", 
                     password_confirm_error="Passwords do not match.",
+<<<<<<< HEAD
                     username=username, email=email, name=name, phone=phone
+=======
+                    username=username, email=email, name=name, phone=phone, gender=gender, region=region, age=age
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
                 )
             if mongo.db.users.find_one({"username": username}):
                 return render_template("EN/signup_EN.html", 
                     username_error="Username already exists.",
+<<<<<<< HEAD
                     email=email, name=name, phone=phone
+=======
+                    email=email, name=name, phone=phone, gender=gender, region=region, age=age
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
                 )
             if mongo.db.users.find_one({"email": email}):
                 return render_template("EN/signup_EN.html", 
                     email_error="Email already exists.",
+<<<<<<< HEAD
                     username=username, name=name, phone=phone
                 )
             if all([username, password, email, name, phone]):
                 new_user = User(username, email, name, phone)
+=======
+                    username=username, name=name, phone=phone, gender=gender, region=region, age=age
+                )
+            if all([username, password, email, name, phone, gender, region, age]):
+                new_user = User(username, email, name, phone, gender, region, age)
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
                 new_user.set_password(password)
                 mongo.db.users.insert_one(new_user.to_dict())
                 return redirect(url_for('auth.login_EN'))

@@ -11,6 +11,7 @@ body {
   .flex-1 { flex:1; }
   .overflow-hidden { overflow:hidden; }
   .bg-gray-50 { background:#FFF9F0; }
+<<<<<<< HEAD
 
   button, .product-card a {
     background-color: #2600FF;
@@ -48,6 +49,8 @@ body {
     background-color: #ccc;
     margin-top: 6px; /* 구분선과 판매처 사이 여백 */
   }
+=======
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
 
   /* --- 기존 CSS 그대로 --- */
   .sidebar {
@@ -138,7 +141,11 @@ body {
     transform:scale(1.1);
   }
   .bookmark-btn.bookmarked svg {
+<<<<<<< HEAD
     fill: #2600FF;
+=======
+    fill: #FF9999;
+>>>>>>> 8592ca44a16150c7cbfcb58f7ebb14d6ca4741ff
   } 
   .product-info {
     padding:16px;
