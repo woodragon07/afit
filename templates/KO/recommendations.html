@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맞춤 추천 | AFIT</title>
+    <!-- CSS 경로 확인 - 정확한 경로로 수정 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/recommendations.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header-container">
+            <div class="nav-buttons">
+                <a href="{{ url_for('product.landing') }}" class="nav-btn" title="홈으로 돌아가기">
+                    <img src="static\iconimages\home.png" alt="home">
+                    <span>홈</span>
+                </a>
+                <a href="{{ url_for('product.search_page') }}" class="nav-btn" title="검색화면으로 가기">
+                    <img src="static\iconimages\magnifier.png" alt="search">
+                    <span>검색</span>
+                </a>
+                <a href="{{ url_for('bookmark.view_bookmarks') }}" class="nav-btn" title="북마크 페이지로 가기">
+                    <img src="static\iconimages\bookmark.png" alt="bookmark">
+                    <span>북마크</span>
+                </a>
+                <button class="nav-btn" title="언어 변경">
+                    <img src="static\iconimages\language.png" alt="Language">
+                    <span>Language</span>
+                </button>
+
+                <div class="user-profile">
+                    <span id="username">환영합니다!!</span>
+                    <button id="logout-btn" class="btn-small">로그아웃</button>
+                </div>
+            </div>
+        </header>        
+
+        <main>
+            <section class="recommendation-header">
+                <h1>나를 위한 맞춤 추천</h1>
+                <p>북마크한 상품을 분석하여 AI가 추천해드립니다.</p>
+                <button id="refresh-recommendations" class="btn">
+                    <i class="fas fa-sync-alt"></i> 추천 새로고침
+                </button>
+            </section>
+
+            <section class="recommendations-container">
+                <div class="loading-spinner" id="loading-spinner">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                    <p>추천 상품을 불러오는 중...</p>
+                </div>
+                
+                <div id="recommendations-grid" class="products-grid">
+                    <!-- 추천 상품이 여기에 동적으로 로드됩니다 -->
+                </div>
+                
+                <div id="empty-state" class="empty-state hidden">
+                    <i class="fas fa-bookmark"></i>
+                    <h3>추천 상품이 없습니다</h3>
+                    <p>북마크를 추가하시면 맞춤형 추천을 받을 수 있습니다.</p>
+                    <a href="{{ url_for('product.search_page') }}" class="btn">상품 검색하러 가기</a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer-container">
+            <p>&copy; 2025 AFIT Shopping. 모든 권리 보유.</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript 경로 확인 - 정확한 경로로 수정 -->
+    <script src="{{ url_for('static', filename='js/recommendations.js') }}"></script>
+</body>
+</html>

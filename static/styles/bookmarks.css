@@ -1,0 +1,223 @@
+body {
+    background-color: #FFF9F0; /* 전체 배경색 변경 */
+    overflow-x: hidden; /* 가로 스크롤 제거 */
+}
+
+.bookmarks-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* 네비게이션 버튼 컨테이너 (중앙 정렬) */
+.nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 15px;
+    background-color: white;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    position: relative;
+}
+
+/* 개별 네비게이션 버튼 */
+.nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background-color: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    color: black;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #ccc;
+    transition: all 0.3s ease-in-out;
+    border-radius: 12px;
+    padding: 0;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.nav-btn img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 5px;
+}
+
+.nav-btn span {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.2;
+    text-align: center;
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+}
+
+/* 버튼 호버 효과 */
+.nav-btn:hover {
+    background-color: #f0f0f0;
+    border-color: #aaa;
+}
+
+/* 북마크 상품 그리드 */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 개별 북마크 카드 */
+.product-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 16px;
+    background-color: white;
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.product-meta {
+    position: relative;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+}
+
+.product-meta::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin-top: 15px;
+}
+
+/* 제품 정보 컨테이너 */
+.product-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.product-image-container {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product-price {
+    color: #2600FF;
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+
+/* 제품 보기 버튼 */
+.product-button {
+    display: block;
+    text-align: center;
+    background-color: #2600FF;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.product-card a:hover {
+    background-color: #305CDE;
+}
+
+/* ✅ 북마크 삭제 버튼 (X 아이콘 스타일 - 크기 증가) */
+.delete-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 36px; /* 기존 30px → 36px로 증가 */
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+/* X 아이콘 크기 조정 */
+.delete-button img {
+    width: 24px; /* 기존 20px → 24px로 증가 */
+    height: 24px;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+/* 마우스 호버 시 효과 */
+.delete-button:hover {
+    background-color: rgba(255, 77, 77, 0.3);
+}
+
+.delete-button:hover img {
+    opacity: 1;
+}
+
+
+
+
+/* 반응형 */
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(4, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .product-grid {
+        grid-template-columns: repeat(4, minmax(180px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(4, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .product-grid {
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+    }
+}

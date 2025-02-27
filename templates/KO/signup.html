@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/signup.css') }}">
+    <style>
+        .error-message {
+            color: #305CDE;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;  /* 기본적으로는 숨김 */
+            padding-left: 5px;
+            transition: all 0.3s ease;  /* 부드러운 표시/숨김 효과 */
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        /* 비활성화된 버튼 스타일 */
+        .submit-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+    <script>
+        let isTyping = false;  // 입력 중인지 상태를 추적
+
+        // 비밀번호 확인 입력 시작할 때
+        function startTyping() {
+            isTyping = true;
+            validatePassword();
+        }
+
+        // 비밀번호 확인 입력 끝날 때
+        function stopTyping() {
+            isTyping = false;
+            setTimeout(validatePassword, 500);  // 입력 완료 0.5초 후 검증
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('password_confirm');
+            const errorDiv = document.getElementById('password_confirm_error');
+            const submitBtn = document.querySelector('.submit-btn');
+
+            // 비밀번호가 다르고, 입력 중이 아닐 때만 에러 메시지 표시
+            if (password.value !== confirmPassword.value && !isTyping && confirmPassword.value !== '') {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = '비밀번호가 일치하지 않습니다.';
+                submitBtn.disabled = true;
+                return false;
+            } else {
+                errorDiv.style.display = 'none';
+                submitBtn.disabled = false;
+                return true;
+            }
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email');
+            const errorDiv = document.getElementById('email_error');
+            
+            if (email.value && !email.value.includes('@')) {
+                errorDiv.textContent = '이메일 주소에 "@"를 포함해 주세요.';
+                errorDiv.style.display = 'block';
+                return false;
+            } else {
+                errorDiv.style.display = 'none';
+                return true;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="signup-container">
+        <h1 class="logo">A F!T</h1>
+        <p class="signup-title"><span>회원정보</span>를 입력해주세요</p>
+        <form method="POST" action="{{ url_for('auth.signup') }}" onsubmit="return validatePassword()">
+            <div class="input-group">
+                <label for="username">아이디</label>
+                <input type="text" id="username" name="username" value="{{ username or '' }}" required>
+                {% if username_error %}
+                <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px;">
+                    {{ username_error }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="input-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" required onchange="validatePassword()">
+            </div>
+            <div class="input-group">
+                <label for="password_confirm">비밀번호 재입력</label>
+                <input type="password" 
+                       id="password_confirm" 
+                       name="password_confirm" 
+                       required 
+                       onfocus="startTyping()"
+                       onblur="stopTyping()"
+                       onkeyup="validatePassword()">
+                <div id="password_confirm_error" class="error-message" style="color: red; font-size: 12px; margin-top: 5px; display: none;">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" value="{{ name or '' }}" required>
+            </div>
+            <div class="input-group">
+                <label for="phone">전화번호</label>
+                <input type="tel" id="phone" name="phone" value="{{ phone or '' }}" required>
+            </div>
+            <div class="input-group">
+            <label for="gender">성별</label>
+            <select id="gender" name="gender" required>
+                <option value="">선택하세요</option>
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+                <option value="other">기타</option>
+            </select>
+            </div>
+            <div class="input-group">
+                <label for="region">지역</label>
+                <select id="region" name="region" required>
+                    <option value="">선택하세요</option>
+                    <option value="seoul">서울</option>
+                    <option value="gyeonggi">경기</option>
+                    <option value="chungnam">충남</option>
+                </select>
+                </div>
+            <div class="input-group">
+                <label for="age">나이</label>
+                <input type="number" id="age" name="age" value="{{ age or '' }}" required>
+            </div>
+            <div class="input-group">
+                <label for="email">이메일</label>
+                <input type="email" 
+                       id="email" 
+                       name="email" 
+                       value="{{ email or '' }}" 
+                       required 
+                       onblur="validateEmail()"
+                       onkeyup="validateEmail()">
+                <div id="email_error" class="error-message">
+                    {% if email_error %}
+                        {{ email_error }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="button" class="back-btn" onclick="history.back()">이전으로</button>
+                <button type="submit" class="submit-btn">완료</button>
+            </div>
+        </form>
+        <!-- 일반적인 오류 메시지 -->
+        {% if error %}
+        <div class="error-message" style="color: red; font-size: 12px; margin-top: 5px; text-align: center;">
+            {{ error }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

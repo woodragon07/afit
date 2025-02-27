@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
+    <style>
+        /* ✅ 로그인 & 회원가입 버튼 동일한 스타일 적용 */
+        .login-btn, .signup-btn {
+            width: 100%;
+            height: 50px;
+            background-color: #305CDE; /* 기본 파란색 */
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover, .signup-btn:hover {
+            background-color: #4D79F0; /* 마우스를 올리면 연한 파란색 */
+        }
+
+        /* ✅ 위아래 간격 조절 */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px; /* 버튼 간격 줄이기 */
+            margin-top: 10px; /* 로그인 박스와의 거리 */
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="logo">A F!T</h1>
+
+        <div id="success-message" class="success-message">Your membership registration has been completed successfully.</div>
+
+        <div class="login-box">
+            <form action="{{ url_for('auth.login_EN') }}" method="post">
+                <div class="input-group">
+                    <span class="icon">👤</span>
+                    <input type="text" id="username" name="username" placeholder=" ID" required>
+                </div>
+                <div class="input-group">
+                    <span class="icon">🔒</span>
+                    <input type="password" id="password" name="password" placeholder="PW" required>
+                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                </div>
+                
+                <div class="button-container"> <!-- ✅ 로그인 & 회원가입 버튼을 묶어서 간격 조절 -->
+                    <!-- ✅ 로그인 버튼 -->
+                    <button type="submit" class="login-btn">Login</button>
+
+                    <!-- ✅ 회원가입 버튼 -->
+                    <a href="{{ url_for('auth.signup_EN') }}">
+                        <button type="button" class="signup-btn">Create Account</button>
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="social-login">
+            <p>SNS Login</p>
+            <div class="social-box">
+                <div class="social-icons">
+                    <a href="{{ url_for('auth.login') }}">
+                        <img src="{{ url_for('static', filename='naver_icon.png') }}" alt="Naver">
+                    </a>
+                    <a href="{{ url_for('auth.login') }}">
+                        <img src="{{ url_for('static', filename='kakao_icon.png') }}" alt="Kakao">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

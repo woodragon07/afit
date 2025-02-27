@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A FIT 북마크 페이지</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/bookmarks.css') }}">
+</head>
+<body class="bg-gray-50">
+    <!-- 헤더 -->
+    <header class="header-container">
+        <div class="container mx-auto px-4 py-3">
+            <div class="nav-container">
+                <a href="{{ url_for('product.landing') }}" class="nav-btn" title="홈으로 돌아가기">
+                    <img src="{{ url_for('static', filename='iconimages/home.png') }}" alt="Return to home">
+                    <span>돌아가기</span>
+                </a>
+                <a href="{{ url_for('product.search_page') }}" class="nav-btn" title="검색화면으로 가기">
+                    <img src="{{ url_for('static', filename='iconimages/magnifier.png') }}" alt="search">
+                    <span>검색하기</span>
+                </a>
+                <a href="{{ url_for('recommendation_page.recommendations_page') }}" class="nav-btn" title="AI추천페이지로 가기">
+                    <img src="{{ url_for('static', filename='iconimages/recommended.png') }}" alt="recommend">
+                    <span>추천</span>
+                </a>
+                <button class="nav-btn" title="언어 변경">
+                    <img src="{{ url_for('static', filename='iconimages/language.png') }}" alt="Language">
+                    <span>Language</span>
+                </button>
+            </div>
+            <br>
+            <div class="bookmarks-content">
+                <div style="font-size:30px; font-weight:bold; color:black;">저장된 북마크</div>
+                <br>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="container mx-auto px-4 py-8">
+        {% if bookmarks %}
+        <div class="product-grid">
+            {% for bookmark in bookmarks %}
+            <div class="product-card" data-bookmark-id="{{ bookmark.item_id }}" style="position: relative;">
+                <!-- ✅ 삭제 버튼 (X 아이콘) 추가 -->
+                <button class="delete-button" onclick="deleteBookmark('{{ bookmark.item_id }}')">
+                    <img src="{{ url_for('static', filename='iconimages/bookmark_close.png') }}" alt="삭제">
+                </button>
+
+                <div class="product-image-container">
+                    <img src="{{ bookmark.image_url }}" alt="{{ bookmark.title }}" class="product-image"/>
+                </div>
+                <div class="product-info">
+                    <div class="product-meta">{{ bookmark.mall_name }}</div>
+                    <h3 class="product-title">{{ bookmark.title }}</h3>
+                    <div class="product-price">{{ bookmark.price }}</div>
+                    <div class="mt-4">
+                        <a href="{{ bookmark.product_url }}" target="_blank" class="product-button">
+                           제품 보기
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8">
+            <p class="text-gray-500">저장된 북마크가 없습니다.</p>
+            <a href="{{ url_for('product.search_page') }}" class="search-button">
+                상품 검색하러 가기
+            </a>
+        </div>
+        {% endif %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/bookmark.js') }}"></script>
+</body>
+</html>

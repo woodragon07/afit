@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+ <meta charset="UTF-8">
+ <title>A FIT - main</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+ <link rel="stylesheet" href="{{ url_for('static', filename='styles/landingstyles.css') }}">
+</head>
+<body>
+ <header>
+  <div style="font-size:35px; font-weight:bold; color:#2600FF;">A FIT</div>
+   <div class="flex gap-x-4">  <!-- 버튼 간격 조정 -->
+    {% if user %}
+    <span class="header-link  text-lg font-bold">Welcome! {{ user.name }}.</span>
+    <span class="separator">|</span>
+    <a href="{{ url_for('auth.logout_EN') }}" class="header-link hover-effect text-lg font-bold">Sign out</a>
+    <span class="separator">|</span>
+    <a href="{{ url_for('bookmark.view_bookmarks') }}" 
+    class="header-link hover-effect text-lg font-bold">
+     Bookmark
+    
+     <span class="separator">|</span></a>
+    <a href="{{ url_for('recommendation_page.recommendations_page') }}" 
+    class="header-link hover-effect text-lg font-bold">
+     Recommendation
+    </a>
+    <span class="separator">|</span>  
+{% else %}
+<span class="separator">|</span>    
+<a href="{{ url_for('auth.login_EN') }}" class="header-link hover-effect text-lg font-bold">Sign in</a>
+<span class="separator">|</span>
+<a href="{{ url_for('auth.signup_EN') }}" class="header-link hover-effect text-lg font-bold">Sign up</a>
+<span class="separator">|</span> 
+    <a href="{{ url_for('bookmark.view_bookmarks') }}" 
+    class="header-link hover-effect text-lg font-bold">
+    Bookmark
+    </a>
+    <span class="separator">|</span>
+{% endif %}
+
+    <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="ko">한국어</option>
+    </select>
+   </div>
+ </header>
+
+ <main>
+   <div class="title"> Want, Talk, Take </div>
+   <div class="subtitle">Every prize at your price! </div>
+
+   <div class="search-box">
+     <input id="landingInput" type="text" class="search-input" 
+            placeholder="Please enter your search term..." 
+            onkeypress="if(event.key==='Enter'){ ENgoSearch(); }" />
+     <button class="search-btn" onclick="ENgoSearch()">
+       <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2">
+         <circle cx="12" cy="12" r="9"></circle>
+         <line x1="22" y1="22" x2="17.65" y2="17.65"></line>
+       </svg>
+     </button>
+   </div>
+
+   <div class="tab-buttons">
+     <button class="tab-btn tab-active" data-tab="helper">Helper</button>
+     <button class="tab-btn tab-inactive" data-tab="shopping">
+        Shopping Assistant</button>
+   </div>
+ </main>
+ <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+</body>
+</html>

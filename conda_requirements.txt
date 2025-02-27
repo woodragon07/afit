@@ -1,0 +1,8 @@
+name: afit
+channels:
+  - defaults
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+  - https://repo.anaconda.com/pkgs/msys2
+  - conda-forge
+prefix: C:\Users\USER\miniforge3\envs\afit
